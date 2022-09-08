@@ -1,9 +1,9 @@
-import { Project } from '@models/project';
+import { Service } from '@models/service';
 import { FirebaseAbstract } from './abstract.repository';
 import { CollectionName } from '@configs/collection-name';
 
-export class ProjectRepository extends FirebaseAbstract<Project> {
+export class ServiceRepository extends FirebaseAbstract<Service> {
   constructor(userId?: string) {
-    super(CollectionName.Projects, userId);
+    super(CollectionName.Services, userId);
   }
 }

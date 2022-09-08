@@ -1,25 +1,21 @@
 import { BaseModel } from '@models/base';
-import { UserLog } from '@models/firebase/log';
 
 export class Log extends BaseModel {
-  user: UserLog;
+  userId!: string;
   event!: LogEvent;
   afterData?: string;
   beforeData?: string;
   collectionPath!: string;
 
-  constructor() {
+  constructor(userId: string, event: LogEvent, collectionPath: string, afterData?: string, beforeData?: string) {
     super();
-    this.user = new UserLog();
+    this.userId = userId;
+    this.event = event;
+    this.collectionPath = collectionPath;
+    this.afterData = afterData;
+    this.beforeData = beforeData;
     this.createdAt = new Date();
   }
 }
 
-export enum LogEvent {
-  CREATE = 'create',
-  UPDATE = 'update',
-  DELETE = 'delete',
-
-  ACTIVE = 'active',
-  DEACTIVATE = 'deactivate'
-}
+export type LogEvent = 'create' | 'update' | 'delete' | 'active'| 'deactivate';

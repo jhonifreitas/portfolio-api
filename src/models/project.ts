@@ -27,9 +27,4 @@ export class Project extends BaseModel {
   }
 }
 
-export enum ProjectType {
-  Mobile = "mobile",
-  System = "system",
-  Website = "website",
-  Ecommerce = "e-commerce"
-}
+export type ProjectType = 'mobile' | 'system' | 'website' | 'e-commerce';

@@ -44,7 +44,7 @@ const ProjectController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _project = new ProjectRepository(response.locals.get('user'));
+    const _project = new ProjectRepository(response.locals.get('user').uid);
     const project = new Project(body);
     project.id = await _project.add(project);
 
@@ -55,11 +55,11 @@ const ProjectController = {
     const body = request.body;
     const { id } = request.params;
 
-    await UpdateValidation.validate({ ...body, id }).catch((err) => {
+    await UpdateValidation.validate(body).catch((err) => {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _project = new ProjectRepository(response.locals.get('user'));
+    const _project = new ProjectRepository(response.locals.get('user').uid);
     const project = await _project.getById(id);
 
     if (body.skillIds) project.skillIds = body.skillIds;
@@ -78,7 +78,7 @@ const ProjectController = {
 
   async active(request: Request, response: Response) {
     const { id } = request.params;
-    const _project = new ProjectRepository(response.locals.get('user'));
+    const _project = new ProjectRepository(response.locals.get('user').uid);
     await _project.softDelete(id, false);
     return response.json();
   },
@@ -87,11 +87,11 @@ const ProjectController = {
     const body = request.body;
     const { id } = request.params;
 
-    await DeleteValidation.validate({ ...body, id }).catch((err) => {
+    await DeleteValidation.validate(body).catch((err) => {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _project = new ProjectRepository(response.locals.get('user'));
+    const _project = new ProjectRepository(response.locals.get('user').uid);
     await _project.delete(id, body.real);
 
     return response.json();

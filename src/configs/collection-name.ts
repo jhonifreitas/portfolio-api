@@ -1,7 +1,12 @@
 export enum CollectionName {
-  Skills = 'skills',
-  Projects = 'projects',
-  Profiles = 'profiles',
+  Companies = 'companies',
+  
+  Logs = 'logs',
 
-  Logs = 'logs'
+  Profiles = 'profiles',
+  Projects = 'projects',
+
+  Services = 'services',
+  Skills = 'skills',
+  Socials = 'socials'
 }

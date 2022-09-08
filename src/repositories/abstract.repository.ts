@@ -1,7 +1,6 @@
 import admin from 'firebase-admin';
 
 import { Log, LogEvent } from '@models/log';
-import { UserLog } from '@models/firebase/log';
 import { BaseModel } from '@interfaces/base-model';
 import { FirebaseWhere } from '@models/firebase/where';
 
@@ -12,7 +11,7 @@ export abstract class FirebaseAbstract<T extends BaseModel> {
 
   constructor(
     protected collectionName: string,
-    protected user?: UserLog
+    protected userId?: string
   ) { }
 
   async add(data: T) {
@@ -25,7 +24,7 @@ export abstract class FirebaseAbstract<T extends BaseModel> {
     delete doc.id;
 
     return this.collection().add(doc).then(async res => {
-      await this.log(LogEvent.CREATE, {id: res.id, ...doc});
+      await this.log('create', {id: res.id, ...doc});
       return res.id;
     });
   }
@@ -38,7 +37,7 @@ export abstract class FirebaseAbstract<T extends BaseModel> {
     delete doc.deletedAt;
     delete doc.id;
 
-    await this.log(LogEvent.UPDATE, {id, ...doc});
+    await this.log('update', {id, ...doc});
     return this.collection().doc(id).update(doc).then(_ => undefined);
   }
 
@@ -67,14 +66,14 @@ export abstract class FirebaseAbstract<T extends BaseModel> {
 
   async delete(id: string, real?: boolean): Promise<void> {
     if (real) {
-      await this.log(LogEvent.DELETE, { id });
+      await this.log('delete', { id });
       return this.collection().doc(id).delete().then(_ => undefined);
     } else return this.softDelete(id, true);
   }
 
   async softDelete(id: string, deleted: boolean): Promise<void> {
     const data = { deletedAt: deleted ? this.timestamp : null };
-    await this.log(deleted ? LogEvent.DEACTIVATE : LogEvent.ACTIVE, { id });
+    await this.log(deleted ? 'deactivate' : 'active', { id });
     return this.collection().doc(id).update(data).then(_ => undefined);
   }
 
@@ -260,21 +259,17 @@ export abstract class FirebaseAbstract<T extends BaseModel> {
 
   // LOG
   private async log(event: LogEvent, afterData: T | {id: string}) {
-    if (this.user) {
-      const log = new Log();
-      log.event = event;
-      log.user.id = this.user.id;
-      log.user.name = this.user.name;
-      log.user.role = this.user.role;
-      log.collectionPath = `${this.collectionName}/${afterData.id}`;
+    if (this.userId) {
+      const collectionPath = `${this.collectionName}/${afterData.id}`;
+      const log = new Log(this.userId, event, collectionPath);
 
-      if (event === LogEvent.CREATE) {
+      if (event === 'create') {
         log.afterData = JSON.stringify(afterData);
-      } else if (LogEvent.UPDATE) {
+      } else if (event === 'update') {
         const beforeData = await this.getById(afterData.id);
         log.beforeData = JSON.stringify(beforeData);
         log.afterData = JSON.stringify(afterData);
-      } else if (LogEvent.DELETE) {
+      } else if (event === 'delete') {
         const beforeData = await this.getById(afterData.id);
         log.beforeData = JSON.stringify(beforeData);
       }
