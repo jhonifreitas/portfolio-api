@@ -91,6 +91,6 @@ const CompanyController = {
 
     return response.json();
   }
-}
+};
 
 export default CompanyController;

@@ -97,6 +97,6 @@ const ProfileController = {
 
     return response.json();
   }
-}
+};
 
 export default ProfileController;

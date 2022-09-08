@@ -93,6 +93,6 @@ const ServiceController = {
 
     return response.json();
   }
-}
+};
 
 export default ServiceController;

@@ -96,6 +96,6 @@ const ProjectController = {
 
     return response.json();
   }
-}
+};
 
 export default ProjectController;

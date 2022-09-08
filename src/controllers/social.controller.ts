@@ -90,6 +90,6 @@ const SocialController = {
 
     return response.json();
   }
-}
+};
 
 export default SocialController;

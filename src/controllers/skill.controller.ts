@@ -91,6 +91,6 @@ const SkillController = {
 
     return response.json();
   }
-}
+};
 
 export default SkillController;
