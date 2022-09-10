@@ -16,7 +16,8 @@ export const errorHandler = (
     });
   }
 
-  console.error(JSON.stringify(err));
+  if (err instanceof Error) console.error(err);
+  else console.error(JSON.stringify(err));
 
   return response.status(500).json({
     status: 500,

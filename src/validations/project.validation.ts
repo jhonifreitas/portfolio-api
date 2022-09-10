@@ -40,3 +40,7 @@ export const UpdateValidation = yup.object().shape({
 export const DeleteValidation = yup.object().shape({
   real: yup.boolean()
 });
+
+export const DeleteImageValidation = yup.object().shape({
+  index: yup.number().min(0).required()
+});

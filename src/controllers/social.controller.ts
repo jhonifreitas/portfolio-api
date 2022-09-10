@@ -44,7 +44,7 @@ const SocialController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _social = new SocialRepository(response.locals.get('user').uid);
+    const _social = new SocialRepository(response.locals.userId);
     const social = new Social(body);
     social.id = await _social.add(social);
 
@@ -59,7 +59,7 @@ const SocialController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _social = new SocialRepository(response.locals.get('user').uid);
+    const _social = new SocialRepository(response.locals.userId);
     const social = await _social.getById(id);
 
     if (body.link) social.link = body.link;
@@ -72,7 +72,7 @@ const SocialController = {
 
   async active(request: Request, response: Response) {
     const { id } = request.params;
-    const _social = new SocialRepository(response.locals.get('user').uid);
+    const _social = new SocialRepository(response.locals.userId);
     await _social.softDelete(id, false);
     return response.json();
   },
@@ -85,7 +85,7 @@ const SocialController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _social = new SocialRepository(response.locals.get('user').uid);
+    const _social = new SocialRepository(response.locals.userId);
     await _social.delete(id, body.real);
 
     return response.json();

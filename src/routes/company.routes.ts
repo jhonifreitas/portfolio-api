@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { upload } from '@middlewares/upload-file';
 import CompanyController from '@controllers/company.controller';
 
 const router = Router();
@@ -7,8 +8,9 @@ const router = Router();
 router.get('/', CompanyController.getAll);
 router.get('/:id', CompanyController.get);
 
-router.post('/', CompanyController.add);
-router.put('/:id', CompanyController.update);
+router.post('/', upload.any(), CompanyController.add);
+router.put('/:id', upload.any(), CompanyController.update);
+
 router.delete('/:id', CompanyController.delete);
 router.patch('/:id/active', CompanyController.active);
 

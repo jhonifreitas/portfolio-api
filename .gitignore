@@ -58,7 +58,7 @@ package-lock.json
 .idea/
 
 # Compiled JavaScript files
-lib/
+dist/
 
 # OS generated files
 .DS_Store

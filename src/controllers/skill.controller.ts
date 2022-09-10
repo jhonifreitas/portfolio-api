@@ -44,7 +44,7 @@ const SkillController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _skill = new SkillRepository(response.locals.get('user').uid);
+    const _skill = new SkillRepository(response.locals.userId);
     const skill = new Skill(body);
     skill.id = await _skill.add(skill);
 
@@ -59,7 +59,7 @@ const SkillController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _skill = new SkillRepository(response.locals.get('user').uid);
+    const _skill = new SkillRepository(response.locals.userId);
     const skill = await _skill.getById(id);
 
     if (body.name) skill.name = body.name;
@@ -73,7 +73,7 @@ const SkillController = {
 
   async active(request: Request, response: Response) {
     const { id } = request.params;
-    const _skill = new SkillRepository(response.locals.get('user').uid);
+    const _skill = new SkillRepository(response.locals.userId);
     await _skill.softDelete(id, false);
     return response.json();
   },
@@ -86,7 +86,7 @@ const SkillController = {
       throw new ValidationError(err.errors[0]);
     });
 
-    const _skill = new SkillRepository(response.locals.get('user').uid);
+    const _skill = new SkillRepository(response.locals.userId);
     await _skill.delete(id, body.real);
 
     return response.json();
