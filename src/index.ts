@@ -6,6 +6,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import nocache from 'nocache';
 import admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 
 import routes from '@routes/index';
 
@@ -13,7 +14,7 @@ dotenv.config();
 admin.initializeApp();
 
 const app = express();
-const port = process.env.PORT || 4444;
+// const port = process.env.PORT || 4444;
 
 app.disable('x-powered-by');
 
@@ -27,6 +28,8 @@ app.use('/', routes);
 
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`API Iniciada: ouvindo na porta ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`API Iniciada: ouvindo na porta ${port}`);
+// });
+
+export const api = functions.https.onRequest(app);

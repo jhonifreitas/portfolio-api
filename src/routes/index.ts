@@ -10,7 +10,7 @@ import SocialRoutes from './social.routes';
 
 const router = Router();
 
-// router.use(ensureAuth());
+router.use(ensureAuth());
 
 router.use('/company', CompanyRoutes);
 router.use('/profile', ProfileRoutes);

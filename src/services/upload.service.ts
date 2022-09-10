@@ -2,15 +2,15 @@ import { storage } from 'firebase-admin';
 
 class UploadStorage {
   uploadFile(path: string, file: Express.Multer.File): Promise<string> {
-    const bucket = storage().bucket(process.env.BUCKET_URL)
+    const bucket = storage().bucket(process.env.BUCKET_URL);
 
     return new Promise((resolve, reject) => {
       if (!file) {
         reject('No image file');
       }
-      let newFileName = `${file.fieldname}_${Date.now()}`;
+      const newFileName = `${file.fieldname}_${Date.now()}`;
 
-      let fileUpload = bucket.file(newFileName);
+      const fileUpload = bucket.file(newFileName);
 
       const blobStream = fileUpload.createWriteStream({
         metadata: {
@@ -19,6 +19,7 @@ class UploadStorage {
       });
 
       blobStream.on('error', (error) => {
+        console.error(error);
         reject('Something is wrong! Unable to upload at the moment.');
       });
 

@@ -1,4 +1,3 @@
-import { storage } from 'firebase-admin';
 import { Request, Response } from 'express';
 
 import { ValidationError } from '@exceptions/validation-error';
