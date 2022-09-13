@@ -11,6 +11,7 @@ export const AddValidation = yup.object().shape({
 
   end: yup.date().nullable(),
   link: yup.string().url().nullable(),
+  logo: yup.string().url().nullable()
 });
 
 export const UpdateValidation = yup.object().shape({
@@ -20,6 +21,7 @@ export const UpdateValidation = yup.object().shape({
 
   end: yup.date().nullable(),
   link: yup.string().url().nullable(),
+  logo: yup.string().url().nullable()
 });
 
 export const DeleteValidation = yup.object().shape({

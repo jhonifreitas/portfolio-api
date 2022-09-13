@@ -10,7 +10,6 @@ import {
 } from '@validations/service.validation';
 
 import { Service } from '@models/service';
-import UploadStorage from '@services/upload.service';
 import { ServiceRepository } from '@repositories/service.repository';
 
 const ServiceController = {
@@ -49,18 +48,6 @@ const ServiceController = {
     const service = new Service(body);
     service.id = await _service.add(service);
 
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `service/${service.id}`;
-
-      // Icon
-      const icon = files.find(x => x.fieldname === 'icon');
-      if (icon) service.icon = await UploadStorage.uploadFile(path, icon);
-
-      await _service.update(service.id, service);
-    }
-
     return response.status(201).json(service);
   },
 
@@ -77,19 +64,9 @@ const ServiceController = {
 
     if (body.title_PT) service.title_PT = body.title_PT;
     if (body.title_EN) service.title_EN = body.title_EN;
-    if (body.icon === null) service.icon = body.icon;
+    if (body.icon || body.icon === null) service.icon = body.icon;
     if (body.description_PT) service.description_PT = body.description_PT;
     if (body.description_EN) service.description_EN = body.description_EN;
-
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `service/${service.id}`;
-
-      // Icon
-      const icon = files.find(x => x.fieldname === 'icon');
-      if (icon) service.icon = await UploadStorage.uploadFile(path, icon);
-    }
 
     await _service.update(service.id, service);
 

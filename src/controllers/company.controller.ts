@@ -10,7 +10,6 @@ import {
 } from '@validations/company.validation';
 
 import { Company } from '@models/company';
-import UploadStorage from '@services/upload.service';
 import { CompanyRepository } from '@repositories/company.repository';
 
 const CompanyController = {
@@ -49,18 +48,6 @@ const CompanyController = {
     const company = new Company(body);
     company.id = await _company.add(company);
 
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `company/${company.id}`;
-
-      // Logo
-      const logo = files.find(x => x.fieldname === 'logo');
-      if (logo) company.logo = await UploadStorage.uploadFile(path, logo);
-
-      await _company.update(company.id, company);
-    }
-
     return response.status(201).json(company);
   },
 
@@ -78,19 +65,10 @@ const CompanyController = {
     if (body.name) company.name = body.name;
     if (body.init) company.init = body.init;
     if (body.end) company.end = body.end;
-    if (body.logo === null) company.logo = body.logo;
     if (body.description) company.description = body.description;
+
+    if (body.logo || body.logo === null) company.logo = body.logo;
     if (body.link || body.link === null) company.link = body.link;
-
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `company/${company.id}`;
-
-      // Logo
-      const logo = files.find(x => x.fieldname === 'logo');
-      if (logo) company.logo = await UploadStorage.uploadFile(path, logo);
-    }
 
     await _company.update(company.id, company);
 

@@ -10,7 +10,6 @@ import {
 } from '@validations/profile.validation';
 
 import { Profile } from '@models/profile';
-import UploadStorage from '@services/upload.service';
 import { ProfileRepository } from '@repositories/profile.repository';
 
 const ProfileController = {
@@ -41,7 +40,6 @@ const ProfileController = {
   async add(request: Request, response: Response) {
     const body = request.body;
 
-    console.log(body);
     await AddValidation.validate(body).catch((err) => {
       throw new ValidationError(err.errors[0]);
     });
@@ -49,26 +47,6 @@ const ProfileController = {
     const _profile = new ProfileRepository(response.locals.userId);
     const profile = new Profile(body);
     profile.id = await _profile.add(profile);
-
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `profile/${profile.id}`;
-
-      // PHOTO
-      const photo = files.find(x => x.fieldname === 'photo');
-      if (photo) profile.photo = await UploadStorage.uploadFile(path, photo);
-
-      // CV_PT
-      const cv_pt = files.find(x => x.fieldname === 'cv_pt');
-      if (cv_pt) profile.photo = await UploadStorage.uploadFile(path, cv_pt);
-
-      // CV_EN
-      const cv_en = files.find(x => x.fieldname === 'cv_en');
-      if (cv_en) profile.photo = await UploadStorage.uploadFile(path, cv_en);
-
-      await _profile.update(profile.id, profile);
-    }
 
     return response.status(201).json(profile);
   },
@@ -85,32 +63,15 @@ const ProfileController = {
     const profile = await _profile.getById(id);
 
     if (body.name) profile.name = body.name;
-    if (body.photo === null) profile.photo = body.photo;
     if (body.profession_init) profile.profession_init = body.profession_init;
     if (body.profession_PT) profile.profession_PT = body.profession_PT;
     if (body.profession_EN) profile.profession_EN = body.profession_EN;
     if (body.about_PT) profile.about_PT = body.about_PT;
     if (body.about_EN) profile.about_EN = body.about_EN;
-    if (body.CV_PT === null) profile.CV_PT = body.CV_PT;
-    if (body.CV_EN === null) profile.CV_EN = body.CV_EN;
 
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `profile/${profile.id}`;
-
-      // PHOTO
-      const photo = files.find(x => x.fieldname === 'photo');
-      if (photo) profile.photo = await UploadStorage.uploadFile(path, photo);
-
-      // CV_PT
-      const cv_pt = files.find(x => x.fieldname === 'cv_pt');
-      if (cv_pt) profile.photo = await UploadStorage.uploadFile(path, cv_pt);
-
-      // CV_EN
-      const cv_en = files.find(x => x.fieldname === 'cv_en');
-      if (cv_en) profile.photo = await UploadStorage.uploadFile(path, cv_en);
-    }
+    if (body.photo || body.photo === null) profile.photo = body.photo;
+    if (body.CV_PT || body.CV_PT === null) profile.CV_PT = body.CV_PT;
+    if (body.CV_EN || body.CV_EN === null) profile.CV_EN = body.CV_EN;
 
     await _profile.update(profile.id, profile);
 

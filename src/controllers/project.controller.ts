@@ -11,7 +11,6 @@ import {
 } from '@validations/project.validation';
 
 import { Project } from '@models/project';
-import UploadStorage from '@services/upload.service';
 import { ProjectRepository } from '@repositories/project.repository';
 
 const ProjectController = {
@@ -50,20 +49,6 @@ const ProjectController = {
     const project = new Project(body);
     project.id = await _project.add(project);
 
-    // UPLOAD
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `project/${project.id}`;
-
-      project.images = [];
-      for (const image of files) {
-        const url = await UploadStorage.uploadFile(path, image);
-        project.images.push(url);
-      }
-
-      await _project.update(project.id, project);
-    }
-
     return response.status(201).json(project);
   },
 
@@ -81,20 +66,12 @@ const ProjectController = {
     if (body.skillIds) project.skillIds = body.skillIds;
     if (body.name) project.name = body.name;
     if (body.type) project.type = body.type;
-    if (body.link || body.link === null) project.link = body.link;
+    if (body.images) project.images = body.images;
     if (body.description_PT) project.description_PT = body.description_PT;
     if (body.description_EN) project.description_EN = body.description_EN;
-    if (body.featured_image) project.featured_image = body.featured_image;
 
-    const files = request.files as Express.Multer.File[];
-    if (files?.length) {
-      const path = `project/${project.id}`;
-
-      for (const image of files) {
-        const url = await UploadStorage.uploadFile(path, image);
-        project.images.push(url);
-      }
-    }
+    if (body.link || body.link === null) project.link = body.link;
+    if (typeof body.featured_image === 'number') project.featured_image = body.featured_image;
 
     await _project.update(project.id, project);
 
