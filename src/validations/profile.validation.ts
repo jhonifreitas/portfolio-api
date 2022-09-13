@@ -10,11 +10,7 @@ export const AddValidation = yup.object().shape({
   profession_PT: yup.string().required(),
   profession_EN: yup.string().required(),
   about_PT: yup.string().required(),
-  about_EN: yup.string().required(),
-
-  photo: yup.string().url().nullable(),
-  CV_PT: yup.string().url().nullable(),
-  CV_EN: yup.string().url().nullable(),
+  about_EN: yup.string().required()
 });
 
 export const UpdateValidation = yup.object().shape({
@@ -23,11 +19,7 @@ export const UpdateValidation = yup.object().shape({
   profession_PT: yup.string().nullable(),
   profession_EN: yup.string().nullable(),
   about_PT: yup.string().nullable(),
-  about_EN: yup.string().nullable(),
-
-  photo: yup.string().url().nullable(),
-  CV_PT: yup.string().url().nullable(),
-  CV_EN: yup.string().url().nullable(),
+  about_EN: yup.string().nullable()
 });
 
 export const DeleteValidation = yup.object().shape({

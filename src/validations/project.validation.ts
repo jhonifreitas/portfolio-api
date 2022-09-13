@@ -17,8 +17,7 @@ export const AddValidation = yup.object().shape({
   description_EN: yup.string().required(),
 
   link: yup.string().nullable(),
-  featured_image: yup.string().nullable(),
-  images: yup.array().of(yup.string().url()).nullable(),
+  featured_image: yup.string().nullable()
 });
 
 export const UpdateValidation = yup.object().shape({
@@ -33,8 +32,7 @@ export const UpdateValidation = yup.object().shape({
   description_PT: yup.string().nullable(),
   description_EN: yup.string().nullable(),
 
-  featured_image: yup.string().nullable(),
-  images: yup.array().of(yup.string().url()).nullable(),
+  featured_image: yup.string().nullable()
 });
 
 export const DeleteValidation = yup.object().shape({
