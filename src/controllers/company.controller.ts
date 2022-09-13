@@ -76,7 +76,10 @@ const CompanyController = {
     const company = await _company.getById(id);
 
     if (body.name) company.name = body.name;
+    if (body.init) company.init = body.init;
+    if (body.end) company.end = body.end;
     if (body.logo === null) company.logo = body.logo;
+    if (body.description) company.description = body.description;
     if (body.link || body.link === null) company.link = body.link;
 
     // UPLOAD
