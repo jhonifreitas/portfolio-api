@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { ensureAuth } from '@middlewares/ensure-auth';
 
 import CompanyRoutes from './company.routes';
 import ProfileRoutes from './profile.routes';
@@ -9,8 +8,6 @@ import SkillRoutes from './skill.routes';
 import SocialRoutes from './social.routes';
 
 const router = Router();
-
-router.use(ensureAuth());
 
 router.use('/company', CompanyRoutes);
 router.use('/profile', ProfileRoutes);
