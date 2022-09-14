@@ -7,7 +7,7 @@ export const GetAllValidation = yup.object().shape({
 });
 
 export const AddValidation = yup.object().shape({
-  companyId: yup.string().required(),
+  companyId: yup.string().nullable(),
   skillIds: yup.array().of(yup.string()).required(),
 
   name: yup.string().required(),
