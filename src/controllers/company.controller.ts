@@ -65,7 +65,8 @@ const CompanyController = {
     if (body.name) company.name = body.name;
     if (body.init) company.init = body.init;
     if (body.end) company.end = body.end;
-    if (body.description) company.description = body.description;
+    if (body.description_PT) company.description_PT = body.description_PT;
+    if (body.description_EN) company.description_EN = body.description_EN;
 
     if (body.logo || body.logo === null) company.logo = body.logo;
     if (body.link || body.link === null) company.link = body.link;
