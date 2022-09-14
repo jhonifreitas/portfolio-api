@@ -1,7 +1,9 @@
+import { Skill } from './skill';
 import { BaseModel } from './base';
+import { Company } from './company';
 
 export class Project extends BaseModel {
-  companyId: string;
+  companyId?: string;
   skillIds: string[];
 
   name: string;
@@ -13,6 +15,9 @@ export class Project extends BaseModel {
 
   images: string[];
   featured_image: number;
+
+  company?: Company;
+  skills?: Skill[];
 
   constructor(data: Project) {
     super();

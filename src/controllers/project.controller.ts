@@ -11,7 +11,10 @@ import {
 } from '@validations/project.validation';
 
 import { Project } from '@models/project';
+
+import { SkillRepository } from '@repositories/skill.repository';
 import { ProjectRepository } from '@repositories/project.repository';
+import { CompanyRepository } from '@repositories/company.repository';
 
 const ProjectController = {
   async getAll(request: Request, response: Response) {
@@ -21,20 +24,53 @@ const ProjectController = {
       throw new ValidationError(err.errors[0]);
     });
     
+    const _skill = new SkillRepository();
     const _project = new ProjectRepository();
+    const _company = new CompanyRepository();
+
     let projects: Project[] = [];
+    const skills = await _skill.getAll();
+    const companies = await _company.getAll();
 
     if (query.active === 'true') projects = await _project.getAllActive();
     else if (query.active === 'false') projects = await _project.getAllDeleted();
     else projects = await _project.getAll();
+
+    for (const project of projects) {
+      if (project.companyId) {
+        project.company = companies.find(x => x.id === project.companyId);
+      }
+
+      project.skills = [];
+      for (const skillId of project.skillIds) {
+        const skill = skills.find(x => x.id === skillId);
+        if (skill) project.skills.push(skill);
+      }
+    }
 
     return response.json(projects);
   },
 
   async get(request: Request, response: Response) {
     const { id } = request.params;
+
+    const _skill = new SkillRepository();
     const _project = new ProjectRepository();
+    const _company = new CompanyRepository();
+
+    const skills = await _skill.getAll();
     const project = await _project.getById(id);
+
+    if (project.companyId) {
+      project.company = await _company.getById(project.companyId);
+    }
+
+    project.skills = [];
+    for (const skillId of project.skillIds) {
+      const skill = skills.find(x => x.id === skillId);
+      if (skill) project.skills.push(skill);
+    }
+
     return response.json(project);
   },
 
@@ -71,6 +107,7 @@ const ProjectController = {
     if (body.description_EN) project.description_EN = body.description_EN;
 
     if (body.link || body.link === null) project.link = body.link;
+    if (body.companyId || body.companyId === null) project.companyId = body.companyId;
     if (typeof body.featured_image === 'number') project.featured_image = body.featured_image;
 
     await _project.update(project.id, project);
